@@ -6,19 +6,19 @@ local trustadmins = false;
 
 
 function readrankname( id )
-  local tab = util.JSONToTable( file.Read("rlib/ranklist.txt", "DATA") )
+  local tab = util.JSONToTable( file.Read("ranklib/ranklist.txt", "DATA") )
   return tab[1];
 end
 
 function hasperm( rankid, permname )
-  local nam = ("rlib/perms/" .. tostring(rankid) .. ".txt");
+  local nam = ("ranklib/perms/" .. tostring(rankid) .. ".txt");
   local tab = util.JSONToTable( file.Read(nam, "DATA") )
   return tab[permname]
 end
 
 function setrank( player, id )
   local ply = getplayerbyname( player )
-  local nam = ("rlib/plylist/" .. tostring(id) .. ".txt");
+  local nam = ("ranklib/plylist/" .. tostring(id) .. ".txt");
   if !ply then return end
   if !file.Exists("plylist", "DATA") then file.CreateDir("plylist") end
   if !file.Exists(nam, "DATA") then file.Write(nam, "") end
@@ -32,9 +32,9 @@ end
 
 function setrank2( player, id )
   local ply = getplayerbyname( player )
-  local nam = ("rlib/plylist/" .. tostring(id) .. ".txt");
+  local nam = ("ranklib/plylist/" .. tostring(id) .. ".txt");
   if !ply then return end
-  if !file.Exists("rlib/plylist", "DATA") then file.CreateDir("plylist") end
+  if !file.Exists("ranklib/plylist", "DATA") then file.CreateDir("plylist") end
   if !file.Exists(nam, "DATA") then file.Write(nam, "") end
   local tabl1 = { ply }
   local tabl2 = util.JSONToTable( file.Read(nam, "DATA") )
@@ -42,7 +42,7 @@ function setrank2( player, id )
 end
 
 function revoke( player )
-  local nam = ("rlib/plylist/" .. tostring( getplayerbyname(player) ) .. ".txt");
+  local nam = ("ranklib/plylist/" .. tostring( getplayerbyname(player) ) .. ".txt");
   local newtab = util.JSONToTable( file.Read(nam) )
   table.RemoveByValue( newtab, getplayerbyname(player) )
   file.Write( nam )
@@ -55,7 +55,7 @@ function getrank( player )
   local ply = getplayerbyname( player )
   local tab;
   for i=1,-1 do
-    local nam = ("rlib/plylist/" .. tostring(i) .. ".txt");
+    local nam = ("ranklib/plylist/" .. tostring(i) .. ".txt");
     if !file.Exists( nam ) then break end
     tab = util.JSONToTable( file.Read(nam, "DATA") )
     for k,v in pairs( tab ) do
