@@ -1,0 +1,15 @@
+{
+  "canexist": true,
+  "haschatprefix": true,
+  "chatcolorR": 0,
+  "chatcolorG": 0,
+  "chatcolorB": 0,
+  "canuseflashlight": true,
+  "canwalk": true,
+  "canrun": false,
+  "canhaveweapon": true,
+  "candrive": false,
+  "cantalk": false,
+  "can_noclip": false,
+  "player_maxspeed": 100
+}
