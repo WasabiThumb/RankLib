@@ -1,0 +1,8 @@
+// Making Ranks \\
+To make a rank, go to ranklist.txt and copy one of the lines and paste it in the one under.
+Make sure there is always a comma at the end and it is always BEFORE "autofill_highest".
+Keep "autofill_highest" true if you want the server owner and superadmins to have the rank at the bottom of the list.
+Replace true with "admin" (with quotations) if you want the server owner, superadmins, AND admins to access the role bottom of the list.
+Replace true with false if you want only those who match the prequisites you set in "preqs.txt".
+
+// Prequisites \\
