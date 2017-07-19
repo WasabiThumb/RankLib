@@ -1,13 +1,18 @@
 -- Don't touch this stuff! We need it to work!
+-- This is the only thing you can change \/
+local trustadmins = false;
+-- /\ Set this to true if you want both superadmins and admins to execute RankLib commands.
+-- Feel free to look around this code and check for malware or whatever, I assure you there is none.
+
 
 function readrankname( id )
-  local tab = util.JSONToTable( file.Read("ranklist.txt") )
+  local tab = util.JSONToTable( file.Read("ranklist.txt", "DATA") )
   return tab[1];
 end
 
-function hasperm( id, permname )
-  local nam = (tostring(id) .. ".txt");
-  local tab = util.JSONToTable( file.Read(nam) )
+function hasperm( rankid, permname )
+  local nam = ("perms/" .. tostring(rankid) .. ".txt");
+  local tab = util.JSONToTable( file.Read(nam, "DATA") )
   return tab[permname]
 end
 
@@ -70,3 +75,12 @@ function getplayerbyname( name )
   end
   return false
 end
+
+-- Picks up info from clients and executes these functions. For security reasons, superadmin only (unless you change the boolean up there).
+util.AddNetworkString("ranklib_set")
+
+net.Receive("ranklib_set", function(len, ply)
+  if !ply:IsSuperAdmin() and !trustadmins then return end
+  if !ply:IsAdmin() then return end
+  setrank( net.ReadString(), net.ReadInt() )
+end )
