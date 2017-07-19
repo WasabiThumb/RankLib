@@ -5,3 +5,7 @@ concommand.Add( "rlib_set", function( ply, cmd, args ) -- rlib_set <playername> 
   net.WriteInt( util.StringToType( args[2], "int" ) )
   net.SendToServer()
 end )
+
+net.Receive( "modtext", function() -- For chat colors & prefixes
+    chat.AddText( net.ReadColor(), net.ReadString() ) 
+end )
