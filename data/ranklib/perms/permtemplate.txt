@@ -1,9 +1,10 @@
 {
   "canexist": true,
-  "haschatprefix": true,
+  "chatprefix": "Example",
   "chatcolorR": 0,
   "chatcolorG": 0,
   "chatcolorB": 0,
+  "chatcolorA": 255,
   "canuseflashlight": true,
   "canwalk": true,
   "canrun": false,
