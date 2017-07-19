@@ -4,13 +4,16 @@ local trustadmins = false;
 -- /\ Set this to true if you want both superadmins and admins to execute RankLib commands.
 -- Feel free to look around this code and check for malware or whatever, I assure you there is none.
 
+-- Remove the next line, and nobody can call any ranklib console commands. Just don't do that.
+AddCSLuaFile("autorun/client/rlib.lua")
 
+--Now we have some functions. Without these, the hooks won't do anything.
 function readrankname( id )
   local tab = util.JSONToTable( file.Read("ranklib/ranklist.txt", "DATA") )
   return tab[1];
 end
 
-function hasperm( rankid, permname )
+function permdata( rankid, permname )
   local nam = ("ranklib/perms/" .. tostring(rankid) .. ".txt");
   local tab = util.JSONToTable( file.Read(nam, "DATA") )
   return tab[permname]
@@ -75,6 +78,63 @@ function getplayerbyname( name )
   end
   return false
 end
+-- Function section is over!
+
+-- These are hooks, which are called when an action happens. If the player associated with the action has the right permissions, they may proceed.
+-- If you know what you are doing, you can edit some stuff here, like the kick message on line 87.
+
+hook.Add( "PlayerInitialSpawn", "rlib_hookset1", function(ply)
+    if !permdata( getrank(ply), "canexist" ) then ply:Kick("You don't have the right rank to exist!") end
+    if !permdata( getrank(ply), "canuseflashlight" ) then ply:AllowFlashlight( false ) end
+    if !permdata( getrank(ply), "canwalk" ) then ply:SetCanWalk( false ) end
+    if !permdata( getrank(ply), "canrun" ) then ply:SetRunSpeed(0) end
+    if !permdata( getrank(ply), "canhaveweapon" ) then ply:StripWeapons() end
+    ply:SetMaxSpeed( permdata( getrank(ply), "player_maxspeed" ) )
+end )
+
+hook.Add( "PlayerCanPickupWeapon", "rlib_hookset2", function(ply, wep)
+    local dta = permdata( getrank(ply), "canhaveweapon" )
+    if !dta then
+      ply:ChatPrint("Your rank disallows the pickup of weapons!")
+    end
+    return dta;
+end )
+
+hook.Add( "Think", "rlib_hookset3", function()
+    for k,v in pairs( ents.GetAll() ) do
+      if v:IsVehicle() then
+        local driv = v:GetDriver()
+        if !permdata( getrank(driv), "candrive" )
+          driv:ExitVehicle()
+          driv:ChatPrint("You don't have the required rank to drive this vehicle!")
+        end
+      end
+    end
+end )
+
+hook.Add( "PlayerNoClip", "rlib_hookset4", function(ply, des)
+    if !permdata( getrank(ply), "can_noclip" ) then
+      ply:ChatPrint("Your rank does not allow noclipping!")
+      return false
+    end
+end )
+
+
+util.AddNetworkString("modtext") -- Specifically for the hook below.
+hook.Add( "PlayerSay", "rlib_hookset5", function(ply, txt, tch)
+    if permdata( getrank(ply), "cantalk" )
+      local cr = permdata( getrank(ply), "chatcolorR" )
+      local cg = permdata( getrank(ply), "chatcolorG" )
+      local cb = permdata( getrank(ply), "chatcolorB" )
+      local ca = permdata( getrank(ply), "chatcolorA" )
+      local prefix = permdata( getrank(ply), "chatprefix" )
+      net.Start("modtext")
+      net.WriteString("[" .. prefix .. "] " .. txt)
+      net.WriteColor( Color( cr, cg, cb, ca ) )
+      net.Broadcast()
+    end
+    return ""
+end )
 
 -- Picks up info from clients and executes these functions. For security reasons, superadmin only (unless you change the boolean up there).
 util.AddNetworkString("rlib_set")
