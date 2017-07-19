@@ -1,0 +1,7 @@
+{
+  "1": "Default Rank",
+  "2": "VIP",
+  "3": "Admin",
+  "4": "Super-Admin",
+  "autofill-highest": true
+}
