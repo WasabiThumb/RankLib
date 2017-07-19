@@ -6,3 +6,18 @@ Replace true with "admin" (with quotations) if you want the server owner, supera
 Replace true with false if you want only those who match the prequisites you set in "preqs.txt".
 
 // Prequisites \\
+Insert one of these types in quotations next to each number (which corresponds with the numbers on the rank list).
+1 cannot be edited because it is user default.
+
+Types:
+"adset" - Can only be obtained by being set by an admin with "ranklib_set <name> <rank number>"
+<number> - Insert an unquoted number here. If a user has that number of frags, then they are granted access to that rank.
+
+// Permissions \\
+Go into the "perms" folder. Make a text file for each number, including 1.
+
+perms>"1.txt"
+perms>"2.txt"
+etc...
+
+There should allready be a template there by the name "permtemplate.txt". Copy the contents into each file and fill out the inside form.
