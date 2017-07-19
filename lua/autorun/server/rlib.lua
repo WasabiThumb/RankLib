@@ -77,9 +77,9 @@ function getplayerbyname( name )
 end
 
 -- Picks up info from clients and executes these functions. For security reasons, superadmin only (unless you change the boolean up there).
-util.AddNetworkString("ranklib_set")
+util.AddNetworkString("rlib_set")
 
-net.Receive("ranklib_set", function(len, ply)
+net.Receive("rlib_set", function(len, ply)
   if !ply:IsSuperAdmin() and !trustadmins then return end
   if !ply:IsAdmin() then return end
   setrank( net.ReadString(), net.ReadInt() )
