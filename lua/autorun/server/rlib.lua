@@ -27,10 +27,10 @@ function setrank( player, id )
   if !file.Exists(nam, "DATA") then file.Write(nam, "") end
   local tabl1 = { ply }
   local tabl2 = util.JSONToTable( file.Read(nam, "DATA") )
-  local newcont = util.TableToJSON( table.Add( tabl1, tabl2 );
+  local newcont = util.TableToJSON( table.Add( tabl1, tabl2 ), true );
   if (tabl2 == "") then newcont = tabl1 end
   revoke( player )
-  file.Write( nam, newcont, true ) )
+  file.Write( nam, newcont )
 end
 
 function setrank2( player, id )
@@ -76,12 +76,22 @@ function getplayerbyname( name )
   for k,v in pairs( player.GetAll() ) do
     if (v:Nick() == name) then ret = v end
   end
-  return false
+  return ret;
 end
+
+function SetHighestRank(ply, tbl)
+  local highest = 1;
+  for i=1,-1 do
+    if !IsValid(tbl[i]) then break end
+    highest = i;
+  end
+  setrank(ply:Nick(), highest)
+end
+
 -- Function section is over!
 
 -- These are hooks, which are called when an action happens. If the player associated with the action has the right permissions, they may proceed.
--- If you know what you are doing, you can edit some stuff here, like the kick message on line 87.
+-- If you know what you are doing, you can edit some stuff here, like the kick message on line 97.
 
 hook.Add( "PlayerInitialSpawn", "rlib_hookset1", function(ply)
     if !permdata( getrank(ply), "canexist" ) then ply:Kick("You don't have the right rank to exist!") end
@@ -90,6 +100,12 @@ hook.Add( "PlayerInitialSpawn", "rlib_hookset1", function(ply)
     if !permdata( getrank(ply), "canrun" ) then ply:SetRunSpeed(0) end
     if !permdata( getrank(ply), "canhaveweapon" ) then ply:StripWeapons() end
     ply:SetMaxSpeed( permdata( getrank(ply), "player_maxspeed" ) )
+    local rlist_table = util.JSONToTable( file.Read( "ranklib/ranklist.txt", "DATA" ) ) -- Should we set this player to highest rank?
+    if rlist_table["autofill_highest"] and ply:IsSuperAdmin() then
+      SetHighestRank( ply, rlist_table )
+    else if rlist_table["autofill_highest"] and ply:IsAdmin() then
+      SetHighestRank( ply, rlist_table )
+    end
 end )
 
 hook.Add( "PlayerCanPickupWeapon", "rlib_hookset2", function(ply, wep)
