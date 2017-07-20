@@ -2,7 +2,7 @@ AddCSLuaFile( "autorun/client/rlib_tp.lua" )
 
 util.AddNetworkString("tpr_receive")
 util.AddNetworkString("tpra")
-hook.Add( "PlayerSay", "rlib_hookset5", function(ply, txt, tch)
+hook.Add( "PlayerSay", "rlib_tpmodule", function(ply, txt, tch)
   if ( string.sub( txt, 1, 5 ) == "/tpr " ) and permdata( getrank(ply), "tpr" ) then
         local totp = getplayerbyname( string.sub( txt, 6 ) );
         if (totp == nil) then return end
