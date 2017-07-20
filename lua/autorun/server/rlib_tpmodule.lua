@@ -1,3 +1,5 @@
+AddCSLuaFile( "autorun/client/rlib_tp.lua" )
+
 function readrankname( id )
   local tab = util.JSONToTable( file.Read("ranklib/ranklist.txt", "DATA") )
   return tab[1];
@@ -125,14 +127,20 @@ hook.Add( "PlayerNoClip", "rlib_hookset4", function(ply, des)
     end
 end )
 
+util.AddNetworkString("tpr_receive")
 util.AddNetworkString("tpra")
 hook.Add( "PlayerSay", "rlib_hookset5", function(ply, txt, tch)
   if ( string.sub( txt, 1, 5 ) == "/tpr " ) and permdata( getrank(ply), "tpr" ) then
         local totp = getplayerbyname( string.sub( txt, 6 ) );
         totp:ChatPrint("User " .. ply:Nick() .. " has requested to teleport to you. Use '/tpr_accept' to accept teleport request.")
-        net.Start("tpra")
+        net.Start("tpr_receive")
         net.WriteEntity(ply)
+        net.WriteBool(false)
         net.Send(totp)
         return ""
+  end
+  if ( string.sub( txt, 1, 11 ) == "/tpr_accept" ) and permdata( getrank(ply), "tpr_accept" ) then
+        net.Start("tpra")
+        net.Send(ply)
   end
 end )
