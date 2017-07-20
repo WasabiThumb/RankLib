@@ -1,16 +1,8 @@
 {
-  "canexist": true,
-  "chatprefix": "Example",
-  "chatcolorR": 0,
-  "chatcolorG": 0,
-  "chatcolorB": 0,
-  "chatcolorA": 255,
-  "canuseflashlight": true,
-  "canwalk": true,
-  "canrun": false,
-  "canhaveweapon": true,
-  "candrive": false,
-  "cantalk": false,
-  "can_noclip": false,
-  "player_maxspeed": 100
+  "tpr": true,
+  "tpr_accept": true,
+  "tprhere": true,
+  "tp": false,
+  "tphere": false,
+  "tpo": false
 }
