@@ -1,13 +1,3 @@
--- Don't touch this stuff! We need it to work!
--- This is the only thing you can change \/
-local trustadmins = false;
--- /\ Set this to true if you want both superadmins and admins to execute RankLib commands.
--- Feel free to look around this code and check for malware or whatever, I assure you there is none.
-
--- Remove the next line, and nobody can call any ranklib console commands. Just don't do that.
-AddCSLuaFile("autorun/client/rlib.lua")
-
---Now we have some functions. Without these, the hooks won't do anything.
 function readrankname( id )
   local tab = util.JSONToTable( file.Read("ranklib/ranklist.txt", "DATA") )
   return tab[1];
@@ -135,28 +125,14 @@ hook.Add( "PlayerNoClip", "rlib_hookset4", function(ply, des)
     end
 end )
 
-
-util.AddNetworkString("modtext") -- Specifically for the hook below.
+util.AddNetworkString("tpra")
 hook.Add( "PlayerSay", "rlib_hookset5", function(ply, txt, tch)
-    if permdata( getrank(ply), "cantalk" )
-      local cr = permdata( getrank(ply), "chatcolorR" )
-      local cg = permdata( getrank(ply), "chatcolorG" )
-      local cb = permdata( getrank(ply), "chatcolorB" )
-      local ca = permdata( getrank(ply), "chatcolorA" )
-      local prefix = permdata( getrank(ply), "chatprefix" )
-      net.Start("modtext")
-      net.WriteString("[" .. prefix .. "] " .. txt)
-      net.WriteColor( Color( cr, cg, cb, ca ) )
-      net.Broadcast()
-    end
-    return ""
-end )
-
--- Picks up info from clients and executes these functions. For security reasons, superadmin only (unless you change the boolean up there).
-util.AddNetworkString("rlib_set")
-
-net.Receive("rlib_set", function(len, ply)
-  if !ply:IsSuperAdmin() and !trustadmins then return end
-  if !ply:IsAdmin() then return end
-  setrank( net.ReadString(), net.ReadInt() )
+  if ( string.sub( txt, 1, 5 ) == "/tpr " ) and permdata( getrank(ply), "tpr" ) then
+        local totp = getplayerbyname( string.sub( txt, 6 ) );
+        totp:ChatPrint("User " .. ply:Nick() .. " has requested to teleport to you. Use '/tpr_accept' to accept teleport request.")
+        net.Start("tpra")
+        net.WriteEntity(ply)
+        net.Send(totp)
+        return ""
+  end
 end )
