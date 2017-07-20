@@ -18,3 +18,9 @@ In console, rlib_set <player> <id>
 
 Only superadmins can use this command.
 If you want to trust admins to use this command, modify lua/autorun/server/rlib.lua
+
+// Command Modules \\
+Check different GitHub branches for Command Modules.
+Their "permtemplate.txt", is different- it shows permissions for text commands added by that module.
+Simply merge the master files with your chosen command module(s) to add the commands and permissions for them.
+Easy as cake!
